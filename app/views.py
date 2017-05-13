@@ -8,7 +8,3 @@ from app import app
 @app.route('/index')
 def index():
     return render_template('index.html', username='nano')
-
-@app.route('/resume', methods=['GET'])
-def resume():
-    return render_template('resume.html')
