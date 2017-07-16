@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> monitor</title>
+    </head>
+    <body>
+        <a href="/monitor/sign_in">登录</a>
+        <a href="/monitor/sign_up">注册</a>
+        <form name="sign_in" action="/monitor/check" method="post">
+            账户：<input type="text" name="account"><br>
+            密码：<input type="password" name="password"><br>
+            <input type="hidden" name="action_type" value="sign_in">
+            <input type="submit" value="登录">
+        </form>
+
+        {% if extra_msg != '' %}
+            <p>{{extra_msg}}</p>
+        {% endif %}
+    </body>
+</html>
