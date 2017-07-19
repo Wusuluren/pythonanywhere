@@ -20,7 +20,7 @@ function loadXMLDoc() {
 function myrefresh() {
     window.location.reload();
 }
-setTimeout('myrefresh()', 1000); //指定1秒刷新一次
+setTimeout('myrefresh()', 60000); //指定刷新间隔
 window.onload = notify;
 function notify(msg) {
     new_msg = $('#my-data').data();

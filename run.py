@@ -1,4 +1,3 @@
-#!venv/bin/python3
 from webapp import app
 
 app.debug = True

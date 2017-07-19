@@ -1,4 +1,3 @@
-#!venv/bin/python3
 from flask import render_template
 from flask import request
 from flask import redirect, url_for
@@ -8,7 +7,7 @@ import webapp.config as config
 
 monitor_all_msg = ''
 monitor_new_msg = ''
-is_sign_in = False
+accountLoginStatus = {}
 
 @app.route('/monitor/')
 @app.route('/monitor/index')
@@ -25,6 +24,7 @@ def monitor_sign_up():
 
 @app.route('/monitor/check', methods=['GET', 'POST'])
 def monitor_check():
+    global accountLoginStatus
     account = request.form.get('account', '')
     passwd = request.form.get('password', '')
     action_type = request.form.get('action_type', '')
@@ -58,22 +58,25 @@ def monitor_check():
         if len(results) == 0:
             err_msg = '用户不存在'
             return render_template('monitor/index.html', extra_msg=err_msg)
+        accountLoginStatus[account] = True
         return redirect('/monitor/logs')
     else:
         pass
 
-@app.route('/monitor/logs', methods=['GET', 'POST'])
-def monitor():
-    global monitor_all_msg, monitor_new_msg
-    new_msg = ''
-    if request.method == 'POST':
-        monitor_new_msg = request.form.get('msg', '')
-        monitor_all_msg += monitor_new_msg
-    else:
-        new_msg = monitor_new_msg
-        monitor_new_msg = ''
-    return render_template('monitor/logs.html', all_msg=monitor_all_msg, new_msg=new_msg)
+@app.route('/monitor/update', methods=['POST'])
+def update_log():
+    global monitor_all_msg, monitor_new_msg, accountLoginStatus
+    account = request.form.get('account', '')
+    if accountLoginStatus.get(account, False) == False:
+        return
+    monitor_new_msg = request.form.get('msg', '')
+    monitor_all_msg += monitor_new_msg
 
-@app.route('/latest_msg', methods=['GET'])
-def latest_msg():
-    print("---")
+@app.route('/monitor/logs', methods=['GET'])
+def logs():
+    global monitor_all_msg, monitor_new_msg, accountLoginStatus
+    # account = request.form.get('account', '')
+    # if accountLoginStatus.get(account, False) == False:
+    #     err_msg = '请登录后操作'
+    #     return render_template('monitor/index.html', extra_msg=err_msg)
+    return render_template('monitor/logs.html', all_msg=monitor_all_msg, new_msg=monitor_new_msg)

@@ -1,4 +1,3 @@
-#!venv/bin/python3
 from flask import render_template
 from flask import request
 from flask import redirect, url_for
