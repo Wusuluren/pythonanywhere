@@ -3,27 +3,27 @@ from flask import render_template
 from flask import request
 from flask import redirect, url_for
 
-from app import app
-import app.config as config
+from webapp import app, webapp
+import webapp.config as config
 
 monitor_all_msg = ''
 monitor_new_msg = ''
 is_sign_in = False
 
-@app.flask.route('/monitor/')
-@app.flask.route('/monitor/index')
+@app.route('/monitor/')
+@app.route('/monitor/index')
 def monitor_index():
     return render_template('monitor/index.html')
 
-@app.flask.route('/monitor/sign_in', methods=['GET', 'POST'])
+@app.route('/monitor/sign_in', methods=['GET', 'POST'])
 def monitor_sign_in():
     return render_template('monitor/sign_in.html')
 
-@app.flask.route('/monitor/sign_up', methods=['GET', 'POST'])
+@app.route('/monitor/sign_up', methods=['GET', 'POST'])
 def monitor_sign_up():
     return render_template('monitor/sign_up.html')
 
-@app.flask.route('/monitor/check', methods=['GET', 'POST'])
+@app.route('/monitor/check', methods=['GET', 'POST'])
 def monitor_check():
     account = request.form.get('account', '')
     passwd = request.form.get('password', '')
@@ -42,19 +42,19 @@ def monitor_check():
         return render_template('monitor/index.html', extra_msg=err_msg)
 
     if action_type == 'sign_up':
-        results = app.mysql.query("select username from %s where username='%s';" % (config.MYSQL_TABLE_MONITOR_USER, account))
+        results = webapp.mysql.query("select username from %s where username='%s';" % (config.MYSQL_TABLE_MONITOR_USER, account))
         if len(results) > 0:
             err_msg = '用户已经存在'
             return render_template('monitor/index.html', extra_msg=err_msg)
         insert_sql = "insert into %s (username, passwd) values ('%s', '%s')" % (config.MYSQL_TABLE_MONITOR_USER, account, passwd)
-        if app.mysql.insert(insert_sql) == False:
+        if webapp.mysql.insert(insert_sql) == False:
             err_msg = '创建用户失败，请重新尝试'
             return render_template('monitor/index.html', extra_msg=err_msg)
         else:
             info_msg = '创建用户成功，请登录'
             return render_template('monitor/index.html', extra_msg=info_msg)
     elif action_type == 'sign_in':
-        results = app.mysql.query("select username from %s where username='%s';" % (config.MYSQL_TABLE_MONITOR_USER, account))
+        results = webapp.mysql.query("select username from %s where username='%s';" % (config.MYSQL_TABLE_MONITOR_USER, account))
         if len(results) == 0:
             err_msg = '用户不存在'
             return render_template('monitor/index.html', extra_msg=err_msg)
@@ -62,7 +62,7 @@ def monitor_check():
     else:
         pass
 
-@app.flask.route('/monitor/logs', methods=['GET', 'POST'])
+@app.route('/monitor/logs', methods=['GET', 'POST'])
 def monitor():
     global monitor_all_msg, monitor_new_msg
     new_msg = ''
@@ -74,6 +74,6 @@ def monitor():
         monitor_new_msg = ''
     return render_template('monitor/logs.html', all_msg=monitor_all_msg, new_msg=new_msg)
 
-@app.flask.route('/latest_msg', methods=['GET'])
+@app.route('/latest_msg', methods=['GET'])
 def latest_msg():
     print("---")
