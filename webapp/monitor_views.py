@@ -68,9 +68,11 @@ def update_log():
     global monitor_all_msg, monitor_new_msg, accountLoginStatus
     account = request.form.get('account', '')
     if accountLoginStatus.get(account, False) == False:
-        return
+        err_msg = '请登录后操作'
+        return render_template('monitor/index.html', extra_msg=err_msg)
     monitor_new_msg = request.form.get('msg', '')
     monitor_all_msg += monitor_new_msg
+    return render_template('monitor/logs.html', all_msg=monitor_all_msg, new_msg=monitor_new_msg)
 
 @app.route('/monitor/logs', methods=['GET'])
 def logs():
@@ -79,4 +81,6 @@ def logs():
     # if accountLoginStatus.get(account, False) == False:
     #     err_msg = '请登录后操作'
     #     return render_template('monitor/index.html', extra_msg=err_msg)
-    return render_template('monitor/logs.html', all_msg=monitor_all_msg, new_msg=monitor_new_msg)
+    new_msg = monitor_new_msg
+    monitor_new_msg =''
+    return render_template('monitor/logs.html', all_msg=monitor_all_msg, new_msg=new_msg)

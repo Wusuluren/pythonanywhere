@@ -17,10 +17,12 @@ function loadXMLDoc() {
     xmlhttp.send();
 }
 // loadXMLDoc()
+
 function myrefresh() {
     window.location.reload();
 }
-setTimeout('myrefresh()', 1000); //指定1秒刷新一次
+setTimeout('myrefresh()', 30000); //指定1秒刷新一次
+
 window.onload = notify;
 function notify(msg) {
     var new_msg = document.getElementsByTagName('meta')['new_msg'].content;
