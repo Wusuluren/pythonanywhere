@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> monitor</title>
+        <title>日志监控</title>
+        <link rel="stylesheet" href="/static/css/monitor/index.css" media="screen" title="no title" charset="utf-8">
     </head>
     <body>
-        <a href="/monitor/sign_in">登录</a>
-        <a href="/monitor/sign_up">注册</a>
-        <form name="sign_in" action="/monitor/check" method="post">
-            账户：<input type="text" name="account"><br>
-            密码：<input type="password" name="password"><br>
-            <input type="hidden" name="action_type" value="sign_in">
-            <input type="submit" value="登录">
-        </form>
-
-        {% if extra_msg != '' %}
-            <p>{{extra_msg}}</p>
-        {% endif %}
+        <div class="info">
+            <a href="/monitor/sign_in">登录</a>
+            <a href="/monitor/sign_up">注册</a>
+        </div>
+        <div class="form">
+            <form name="sign_in" action="/monitor/check" method="post">
+                账户：<input type="text" name="account"><br>
+                密码：<input type="password" name="password"><br>
+                <input type="hidden" name="action_type" value="sign_in">
+                <input type="submit" value="登录">
+            </form>
+        </div>
+        <div class="msg">
+            {% if extra_msg != '' %}
+                <p>{{extra_msg}}</p>
+            {% endif %}
+        </div>
     </body>
 </html>

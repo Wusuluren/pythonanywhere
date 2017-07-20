@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> monitor登录</title>
+        <title>登录</title>
+        <link rel="stylesheet" href="/static/css/monitor/index.css" media="screen" title="no title" charset="utf-8">
     </head>
     <body>
-        <form name="sign_in" action="/monitor/check" method="post">
-            账户：<input type="text" name="account"><br>
-            密码：<input type="password" name="password"><br>
-            <input type="hidden" name="action_type" value="sign_in">
-            <input type="submit" value="登录">
-        </form>
+        <div class="form">
+            <form name="sign_in" action="/monitor/check" method="post">
+                账户：<input type="text" name="account"><br>
+                密码：<input type="password" name="password"><br>
+                <input type="hidden" name="action_type" value="sign_in">
+                <input type="submit" value="登录">
+            </form>
+        </div>
     </body>
 </html>

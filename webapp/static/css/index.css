@@ -1,0 +1,13 @@
+.logo {
+  color: white;
+  background: grey;
+  margin: 20px;
+  text-align: center;
+  font-size: 50px;
+}
+
+.widget {
+  text-align: left;
+  margin: 20px;
+  font-size: 20px;
+}
