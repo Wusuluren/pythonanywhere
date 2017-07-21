@@ -1,0 +1,13 @@
+.head {
+  color: white;
+  background: grey;
+  margin: 20px;
+  text-align: center;
+  font-size: 50px;
+}
+
+.records {
+  text-align: left;
+  margin: 20px;
+  font-size: 16px;
+}

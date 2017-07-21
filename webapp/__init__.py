@@ -41,5 +41,6 @@ webapp.mysql.execute(create_table_sql)
 
 from webapp import views
 from webapp import monitor_views
+from webapp import github_records
 # from webapp import chat_room_views
 from webapp import mysql
