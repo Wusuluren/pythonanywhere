@@ -76,14 +76,15 @@ def logs(username):
     status = webapp.redis_monitor_user.hget(username)
     if status != b'True':
         err_msg = '请先登录'
-        print(status)
         return render_template('monitor/index.html', extra_msg=err_msg)
     result = webapp.mysql_monitor.query("select date, msg from %s where username='%s'" % (config.MYSQL_TABLE_MONITOR_LOG, username))
-    # logs = []
     all_msg=''
     if len(result) > 0:
         for r in result:
-            # logs.append(r)
-            all_msg += r[0]+'\n'+r[1]+'\n'
+            all_msg += r[0]+'<br>'+r[1]+'<br>'
     new_msg = webapp.redis_monitor_log.hget(username)
     return render_template('monitor/logs.html', username=username, all_msg=all_msg, new_msg=new_msg)
+
+@app.route('/monitor/<username>/leave', methods=['GET'])
+def leave(username):
+    webapp.redis_monitor_user.hset(username, False)

@@ -1,3 +1,4 @@
+var username = document.getElementsByTagName('meta')['username'].content
 function loadXMLDoc() {
     var xmlhttp;
     if (window.XMLHttpRequest) {
@@ -13,16 +14,18 @@ function loadXMLDoc() {
             document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
         }
     };
-    xmlhttp.open("GET", "/latest_msg", true);
+    xmlhttp.open("GET", `/monitor/${username}/leave`, true);
     xmlhttp.send();
 }
-// loadXMLDoc()
-
-var username = document.getElementsByTagName('meta')['username'].content
-function myrefresh() {
-    window.location.href = `/monitor/${username}/logs`
+window.onbeforeunload = function() {
+    loadXMLDoc()    
+    return true
 }
-setTimeout('myrefresh()', 30000); //指定1秒刷新一次
+
+setTimeout(function() {
+    window.onbeforeunload = function(){}
+    window.location.href = `/monitor/${username}/logs`
+}, 10000);
 
 window.onload = notify;
 function notify(msg) {
