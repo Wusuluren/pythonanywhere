@@ -18,8 +18,9 @@ function loadXMLDoc() {
 }
 // loadXMLDoc()
 
+var username = document.getElementsByTagName('meta')['username'].content
 function myrefresh() {
-    window.location.reload();
+    window.location.href = `/monitor/${username}/logs`
 }
 setTimeout('myrefresh()', 30000); //指定1秒刷新一次
 

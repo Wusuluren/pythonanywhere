@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup as bs
 from flask import render_template
 
-from webapp import app, webapp
+from flask_app import app
 
 @app.route('/github_records', methods=["GET"])
 def github_records():

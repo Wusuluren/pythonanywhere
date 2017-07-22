@@ -3,8 +3,8 @@ from flask import request
 from flask import redirect, url_for
 from flask import flash
 
-from webapp import app
-from webapp.forms import LoginForm
+from flask_app import app
+from flask_app.forms import LoginForm
 
 @app.route('/chat_room_login', methods=["GET", "POST"])
 def chat_room_login():

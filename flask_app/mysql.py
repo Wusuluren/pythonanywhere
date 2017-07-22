@@ -1,18 +1,14 @@
+#!/usr/bin/virtualenv python
 import pymysql
 import logging
 
-class User(object):
-    def __init__(slef, name, passwd):
-        self.name = name
-        self.passwd = passwd
-
-class MysqlUser(object):
+class Mysql(object):
     def __init__(self, logger, host, user, passwd, dbname):
+        self.logger = logger or logging.getLogger()
         self.host = host
         self.user = user
         self.passwd = passwd
         self.dbname = dbname
-        self.logger = logger or logging.getLogger()
 
     def open(self):
         self.db = pymysql.connect(self.host, self.user, self.passwd, self.dbname)
@@ -32,8 +28,8 @@ class MysqlUser(object):
             self.logger.debug(sql)
             self.cursor.execute(sql)
             results = self.cursor.fetchall()
-        except:
-            self.logger.error('query error')
+        except Exception as e:
+            self.logger.error('query error:', e)
         return results
 
     def insert(self, sql):
@@ -42,9 +38,9 @@ class MysqlUser(object):
             self.cursor.execute(sql)
             self.db.commit()
             return True
-        except:
+        except Exception as e:
             self.db.rollback()
-            self.logger.error('insert error')
+            self.logger.error('insert error:', e)
             return False
 
     def close(self):
