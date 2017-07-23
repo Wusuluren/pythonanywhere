@@ -12,4 +12,3 @@ def github_records():
     soup = bs(resp.text, 'html.parser')
     records = soup.find(id='readme')
     return render_template('github_records/index.html', records=records)
-

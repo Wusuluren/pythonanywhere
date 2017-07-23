@@ -2,6 +2,7 @@ from flask import render_template
 from flask import request
 from flask import redirect, url_for
 from datetime import datetime
+import json
 
 from  flask_app import app, webapp
 import flask_app.config as config
@@ -55,7 +56,9 @@ def monitor_check():
         if not is_user_exist(username):
             err_msg = '用户不存在'
             return render_template('monitor/index.html', extra_msg=err_msg)
-        webapp.redis_monitor_user.hset(username, True)
+        userinfo = {'name':username, 'date':str(datetime.now()), 'status':True}
+        raw = json.dumps(userinfo)
+        webapp.redis_monitor_user.hset(username, raw)
         return redirect('/monitor/%s/logs' % username)
     else:
        return '500' 
@@ -73,8 +76,10 @@ def update_log(username):
 
 @app.route('/monitor/<username>/logs', methods=['GET'])
 def logs(username):
-    status = webapp.redis_monitor_user.hget(username)
-    if status != b'True':
+    raw = webapp.redis_monitor_user.hget(username)
+    userinfo = json.loads(raw)
+    status = userinfo['status']
+    if status != True:
         err_msg = '请先登录'
         return render_template('monitor/index.html', extra_msg=err_msg)
     result = webapp.mysql_monitor.query("select date, msg from %s where username='%s'" % (config.MYSQL_TABLE_MONITOR_LOG, username))
@@ -83,8 +88,13 @@ def logs(username):
         for r in result:
             all_msg += r[0]+'<br>'+r[1]+'<br>'
     new_msg = webapp.redis_monitor_log.hget(username)
+    webapp.redis_monitor_log.hset(username, '')
     return render_template('monitor/logs.html', username=username, all_msg=all_msg, new_msg=new_msg)
 
 @app.route('/monitor/<username>/leave', methods=['GET'])
 def leave(username):
-    webapp.redis_monitor_user.hset(username, False)
+    raw = webapp.redis_monitor_user.hget(username)
+    userinfo = json.loads(raw)
+    userinfo['status'] = False
+    raw = json.dumps(userinfo)
+    webapp.redis_monitor_user.hset(username, raw)
