@@ -12,9 +12,20 @@ let Snake = function(ctx) {
         xScale: 30,
         yScale: 30,
         direction: DIR_RIGHT,
+        imgBodyLoadDone: false,
+        imgHeadLoadDone: false,
+    }
+    obj.imgHead.src = "/static/js/games/head.png"
+    obj.imgHead.onload = function() {
+        obj.imgHeadLoadDone = true
     }
     obj.imgBody.src = "/static/js/games/body.png"
-    obj.imgHead.src = "/static/js/games/head.png"
+    obj.imgBody.onload = function() {
+        obj.imgBodyLoadDone = true
+    }
+    obj.imgLoadDone = function() {
+        return obj.imgBodyLoadDone && obj.imgHeadLoadDone
+    }
     obj.movePosLeft = function(p) {
         p.x -= obj.xScale
         if (p.x < 0) {
@@ -181,8 +192,15 @@ let Food = function(ctx) {
         y: 0,
         xScale: 30,
         yScale: 30,
+        imgFoodLoadDone: false,
     }
     obj.imgFood.src = "/static/js/games/food.png"
+    obj.imgFood.onload = function() {
+        obj.imgFoodLoadDone = true
+    }
+    obj.imgLoadDone = function() {
+        return obj.imgFoodLoadDone
+    }
     obj.draw = function() {
         obj.ctx.drawImage(obj.imgFood, obj.x, obj.y, obj.xScale, obj.yScale)
     }
@@ -220,8 +238,8 @@ let Game = function() {
         ctx : ctx,
         height : canvas.height,
         width : canvas.width,
-        snake : Snake(ctx),
         food : Food(ctx),
+        snake : Snake(ctx),
         gameover: false,
     }
     obj.update = function() {
@@ -229,13 +247,16 @@ let Game = function() {
             return
         }
         obj.collision()
+        obj.food.draw()
         obj.snake.move()
     }
     obj.init = function() {
-        let height = canvas.height
-        let width = canvas.width
-        obj.snake.init(height, width)
+        let height = Math.floor(window.innerHeight/30) *30
+        let width = Math.floor(window.innerWidth/30) *30
+        canvas.height = height
+        canvas.width = width
         obj.food.init(height, width)
+        obj.snake.init(height, width)
     }
     isSamePostion = function(a, b) {
         return (a.y == b.y) && (a.x == b.x)
@@ -258,13 +279,25 @@ let Game = function() {
             obj.food.renew()
         }
     }
+    obj.imgLoadDone = function() {
+        imgLoadDone = obj.snake.imgLoadDone() && obj.food.imgLoadDone()
+        if (!imgLoadDone) {
+            window.setTimeout(obj.imgLoadDone, 100)
+        } else {
+            obj.start()
+        }
+    }
+    obj.start = function() {
+        window.onkeypress = obj.snake.keyHandler
+        window.setInterval(obj.update, 1000)
+    }
     obj.init()
-    window.onkeypress = obj.snake.keyHandler
-    window.setInterval(obj.update, 1000)
     return obj
 }
 
 let main_ = function() {
     let game = Game()
+    window.setTimeout(game.imgLoadDone, 100)
+    // game.start()
 }
 main_()
