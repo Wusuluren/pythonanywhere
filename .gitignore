@@ -1,4 +1,4 @@
 __pycache__
-webapp/__pycache__
+flask_app/__pycache__
 .idea
 .vscode

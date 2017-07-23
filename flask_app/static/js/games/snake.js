@@ -262,15 +262,12 @@ let Game = function() {
         return (a.y == b.y) && (a.x == b.x)
     }
     obj.collision = function() {
-        for (let i = 0; i < obj.snake.pos.length; i++) {
-            let p = obj.snake.pos[i]
-            for (let j = 0; j <  obj.snake.pos.length; j++) {
-                let p2 = obj.snake.pos[j]
-                if ((i != j) && isSamePostion(p, p2)) {
-                    obj.gameover = true
-                    alert('Game Over')
-                    return
-                }
+        let head = obj.snake.pos[0]
+        for (let p of obj.snake.pos) {
+            if ((head !== p) && isSamePostion(head, p)) {
+                obj.gameover = true
+                alert('Game Over')
+                return
             }
         }
         foodPos = {x:obj.food.x, y:obj.food.y}
