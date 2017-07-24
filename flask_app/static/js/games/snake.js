@@ -18,10 +18,12 @@ let Snake = function(ctx) {
     obj.imgHead.src = "/static/js/games/head.png"
     obj.imgHead.onload = function() {
         obj.imgHeadLoadDone = true
+        checkImgLoadDone()
     }
     obj.imgBody.src = "/static/js/games/body.png"
     obj.imgBody.onload = function() {
         obj.imgBodyLoadDone = true
+        checkImgLoadDone()
     }
     obj.imgLoadDone = function() {
         return obj.imgBodyLoadDone && obj.imgHeadLoadDone
@@ -197,6 +199,7 @@ let Food = function(ctx) {
     obj.imgFood.src = "/static/js/games/food.png"
     obj.imgFood.onload = function() {
         obj.imgFoodLoadDone = true
+        checkImgLoadDone()
     }
     obj.imgLoadDone = function() {
         return obj.imgFoodLoadDone
@@ -277,12 +280,7 @@ let Game = function() {
         }
     }
     obj.imgLoadDone = function() {
-        imgLoadDone = obj.snake.imgLoadDone() && obj.food.imgLoadDone()
-        if (!imgLoadDone) {
-            window.setTimeout(obj.imgLoadDone, 100)
-        } else {
-            obj.start()
-        }
+        return obj.snake.imgLoadDone() && obj.food.imgLoadDone()
     }
     obj.start = function() {
         window.onkeypress = obj.snake.keyHandler
@@ -292,9 +290,10 @@ let Game = function() {
     return obj
 }
 
-let main_ = function() {
-    let game = Game()
-    window.setTimeout(game.imgLoadDone, 100)
-    // game.start()
+let game = Game()
+function checkImgLoadDone() {
+    if (!game.imgLoadDone()) {
+        return
+    }
+    game.start()
 }
-main_()
