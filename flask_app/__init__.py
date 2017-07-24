@@ -31,5 +31,6 @@ monitor.monitor_init_redis(webapp)
 from flask_app import views
 from flask_app import monitor_views
 from flask_app import games_views
+from flask_app import markdown_views
 from flask_app import github_records
 from flask_app import mysql
