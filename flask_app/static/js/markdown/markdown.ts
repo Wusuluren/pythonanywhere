@@ -1,27 +1,24 @@
 let text:string = `
-big header <br>
-====== <br>
-little header <br>
---- <br>
-# head-1 <br>
-###### head-6 <br>
-text <br>
-*xieti* <br>
-**bold** <br>
- 
------
- 
-![pic](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512) <br>
-baidu[baidu](http://www.baidu.com) <br>
-- list1 <br>
-    - list1-1 <br>
-- list2 <br>
-    - list2-1 <br>
-* list2 <br>
-1.  hello <br>
-2. world <br>
-1. good <br>
-3. bye <br>
+大标题<br>
+======<br>
+小标题<br>
+---<br>
+# 一级标题<br>
+###### 六级标题<br>
+普通文本<br>
+*斜体*<br>
+**粗体**<br>
+ <br>
+-----<br>
+ <br>
+![图片](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512)<br>
+链接[百度](http://www.baidu.com)<br>
+- 无须列表<br>
+    - 嵌套<br>
+* 无序列表2<br>
+1. 有序列表<br>
+2. 有序列表2<br>
+1. 有序列表3<br>
 `
 
 enum SymbolType{
@@ -251,6 +248,9 @@ class Engine {
         if (idx+2 > lines.length) {
             return false
         }
+        if (lines.length < 3) {
+            return false
+        }
         for (let c of lines[idx]) {
             if (c != ' ') {
                 return false
@@ -277,6 +277,7 @@ class Engine {
         let outputLines:string[] = []
         let lines = this.input.split('\n')
         for (let i= 0; i < lines.length; i++) {
+            console.log(lines[i])
             let [bool, level]:[boolean,number] = this.isHeader(lines[i])
             if (bool) {
                 symbol.push({name:SymbolType.Header, level:level, line:i})
@@ -417,8 +418,10 @@ class Engine {
     }
 }
 
-let md = new Engine(text) 
+let md = new Engine(text.replace(/<br>/g, '')) 
 md.Preprocess()
 md.Process()
-document.getElementById('text').innerHTML = "原始文本<hr>"+text
-document.getElementById('markdown').innerHTML = "Markdown文本<hr>"+md.Output()
+document.getElementById('text_title').innerHTML = "原始文本"
+document.getElementById('text').innerHTML = text
+document.getElementById('markdown_title').innerHTML = "Markdown文本"
+document.getElementById('markdown').innerHTML = md.Output()
