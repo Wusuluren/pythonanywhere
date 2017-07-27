@@ -1,20 +1,27 @@
 let text = `
-big header
-======
-little header
----
-# head-1
-###### head-6
-text
-- list1
-    - list1-1
-- list2
-    - list2-1
-* list2
-1.  hello
-2. world
-1. good
-3. bye
+big header <br>
+====== <br>
+little header <br>
+--- <br>
+# head-1 <br>
+###### head-6 <br>
+text <br>
+*xieti* <br>
+**bold** <br>
+ 
+-----
+ 
+![pic](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512) <br>
+baidu[baidu](http://www.baidu.com) <br>
+- list1 <br>
+    - list1-1 <br>
+- list2 <br>
+    - list2-1 <br>
+* list2 <br>
+1.  hello <br>
+2. world <br>
+1. good <br>
+3. bye <br>
 `;
 var SymbolType;
 (function (SymbolType) {
@@ -27,6 +34,7 @@ var SymbolType;
     SymbolType[SymbolType["UnorderListClose"] = 7] = "UnorderListClose";
     SymbolType[SymbolType["OrderListOpen"] = 8] = "OrderListOpen";
     SymbolType[SymbolType["OrderListClose"] = 9] = "OrderListClose";
+    SymbolType[SymbolType["SepLine"] = 10] = "SepLine";
 })(SymbolType || (SymbolType = {}));
 class Engine {
     constructor(input) {
@@ -105,7 +113,6 @@ class Engine {
         if (tabLen != 0) {
             i += tabLen - 1;
         }
-        console.log(line.slice(i, line.length));
         if ((line[i] == '-') || (line[i] == '*')) {
             if (line[i + 1] == ' ') {
                 return [true, level];
@@ -150,6 +157,121 @@ class Engine {
     renderOrderList(input, level) {
         return `<li>${input.slice((level - 1) + 3, input.length)}</li>`;
     }
+    renderHref(line) {
+        let leader = -1;
+        let leftBracket = -1;
+        let rightBracket = -1;
+        let leftParentheses = -1;
+        let rightParentheses = -1;
+        for (let i = 0; i < line.length; i++) {
+            if ((line[i] == '!') && (leader == -1)) {
+                leader = i;
+            }
+            if ((line[i] == '[') && (leftBracket == -1)) {
+                leftBracket = i;
+            }
+            if ((line[i] == ']') && (rightBracket == -1)) {
+                rightBracket = i;
+            }
+            if ((line[i] == '(') && (leftParentheses == -1)) {
+                leftParentheses = i;
+            }
+            if ((line[i] == ')') && (rightParentheses == -1)) {
+                rightParentheses = i;
+            }
+        }
+        let symType = '';
+        if (leader + 1 == leftBracket) {
+            symType = 'img';
+        }
+        else if ((leader + 1 != leftBracket)) {
+            if ((leftBracket != -1) && (rightBracket != -1) &&
+                (leftParentheses != -1) && (rightParentheses != -1)) {
+                symType = 'url';
+            }
+        }
+        if (symType == '') {
+            return line;
+        }
+        if (rightBracket + 1 != leftParentheses) {
+            return line;
+        }
+        if (leader >= leftBracket) {
+            return line;
+        }
+        if (leftBracket >= rightBracket) {
+            return line;
+        }
+        if (rightBracket >= leftParentheses) {
+            return line;
+        }
+        if (leftParentheses >= rightParentheses) {
+            return line;
+        }
+        if (symType == 'img') {
+            return `${line.slice(0, leader)}
+            <img src='${line.slice(leftParentheses + 1, rightParentheses)}' alt='${line.slice(leftBracket + 1, rightBracket)}'>
+            ${line.slice(rightParentheses + 1, line.length)}`;
+        }
+        else if (symType == 'url') {
+            return `${line.slice(0, leftBracket)}
+            <a href='${line.slice(leftParentheses + 1, rightParentheses)}'>${line.slice(leftBracket + 1, rightBracket)}</a>
+            ${line.slice(rightParentheses + 1, line.length)}`;
+        }
+        return line;
+    }
+    renderFont(line) {
+        let stars = [];
+        for (let i = 0; i < line.length; i++) {
+            if (line[i] == '*') {
+                stars.push(i);
+            }
+        }
+        if (stars.length == 2) {
+            return `${line.slice(0, stars[0])}
+            <i>${line.slice(stars[0] + 1, stars[1])}</i>
+            ${line.slice(stars[1] + 1, line.length)}`;
+        }
+        if (stars.length == 4) {
+            if ((stars[0] + 1 == stars[1]) && (stars[2] + 1 == stars[3])) {
+                return `${line.slice(0, stars[0])}
+                <b>${line.slice(stars[1] + 1, stars[2])}</b>
+                ${line.slice(stars[3] + 1, line.length)}`;
+            }
+        }
+        return line;
+    }
+    renderText(line) {
+        let output = line;
+        output = this.renderHref(output);
+        output = this.renderFont(output);
+        return output;
+    }
+    isSepLine(lines, idx) {
+        if (idx + 2 > lines.length) {
+            return false;
+        }
+        for (let c of lines[idx]) {
+            if (c != ' ') {
+                return false;
+            }
+        }
+        for (let c of lines[idx + 2]) {
+            if (c != ' ') {
+                return false;
+            }
+        }
+        for (let c of lines[idx + 1]) {
+            if (c == '-') {
+                continue;
+            }
+            if (c == '*') {
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
     Preprocess() {
         let symbol = [];
         let outputLines = [];
@@ -175,11 +297,13 @@ class Engine {
                 symbol.push({ name: SymbolType.OrderList, level: level, line: i });
                 continue;
             }
+            bool = this.isSepLine(lines, i);
+            if (bool) {
+                symbol.push({ name: SymbolType.SepLine, line: i });
+                i += 2;
+            }
         }
         this.symbol = symbol;
-        // for (let obj of symbol) {
-        //     console.log(obj)
-        // }
     }
     Process() {
         let outputList = [];
@@ -233,13 +357,6 @@ class Engine {
                 }
             }
         }
-        // for (let obj of unorderList) {
-        //     console.log(obj)
-        // }
-        // for (let obj of orderList) {
-        //     console.log(obj)
-        // }
-        // console.log(symLine)
         for (let i = 0; i < lines.length; i++) {
             for (let sym of unorderList) {
                 if (i > sym.line) {
@@ -283,6 +400,10 @@ class Engine {
                     case SymbolType.OrderList:
                         outputList.push(this.renderOrderList(lines[i], level));
                         break;
+                    case SymbolType.SepLine:
+                        outputList.push(`<hr/>`);
+                        i += 2;
+                        break;
                 }
                 symIdx += 1;
                 if (symIdx < this.symbol.length) {
@@ -293,8 +414,7 @@ class Engine {
                 }
                 continue;
             }
-            console.log("text: ", lines[i]);
-            outputList.push(lines[i]);
+            outputList.push(this.renderText(lines[i]));
         }
         this.output = outputList.join('');
     }
@@ -305,5 +425,5 @@ class Engine {
 let md = new Engine(text);
 md.Preprocess();
 md.Process();
-document.getElementById('text').innerHTML = md.Output();
-console.log(md.Output());
+document.getElementById('text').innerHTML = "原始文本<hr>" + text;
+document.getElementById('markdown').innerHTML = "Markdown文本<hr>" + md.Output();
