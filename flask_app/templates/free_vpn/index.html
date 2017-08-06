@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <title>Free VPN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="/static/css/index.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="logo">
+            Free VPN
+        </div>
+        <div class="widget">
+            {% for account in accounts %}
+                服务器：{{account[0]}} <br>
+                用户：{{account[1]}} <br>
+                密码：{{account[2]}} <br>
+                <hr>
+            {% endfor %}
+        </div>
+    </body>
+</html>
