@@ -1,7 +1,8 @@
 #!/usr/bin/virtualenv python
 import flask_app.config as config
 from flask_app.mysql import Mysql
-from flask_app.redis import  Redis
+from flask_app.redis import Redis
+from flask_app.sqlite import Sqlite
 
 # class User(object):
 #     def __init__(self, name, passwd):
@@ -51,6 +52,22 @@ def monitor_init_redis(webapp):
         config.REDIS_TABLE_MONITOR_LOG)
     redis_monitor_log.open()
 
-
     webapp.redis_monitor_user = redis_monitor_user
     webapp.redis_monitor_log = redis_monitor_log
+
+class BlogArticle(Sqlite):
+    pass
+def blog_init_sqlite(webapp):
+    sqlite_blog = Sqlite(webapp.logger, config.SQLITE_DB_BLOG)
+    sqlite_blog.open()
+    if sqlite_blog.exists(config.SQLITE_TABLE_ARTICLE) == False:
+        create_blog_article_table_sql = "create table %s \
+            (id integer primary key autoincrement, \
+            article text not null, \
+            date text, \
+            tag text, \
+            content text \
+            );" % config.SQLITE_TABLE_ARTICLE
+        sqlite_blog.execute(create_blog_article_table_sql)
+
+    webapp.sqlite_blog = sqlite_blog

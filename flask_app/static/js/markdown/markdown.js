@@ -423,10 +423,15 @@ class Engine {
         return this.output;
     }
 }
-let md = new Engine(text.replace(/<br>/g, ''));
-md.Preprocess();
-md.Process();
-document.getElementById('text_title').innerHTML = "原始文本";
-document.getElementById('text').innerHTML = text;
-document.getElementById('markdown_title').innerHTML = "Markdown文本";
-document.getElementById('markdown').innerHTML = md.Output();
+window.onload = function () {
+    let textarea = document.getElementById('textarea');
+    textarea.style.height = (window.innerHeight).toString() + "px";
+    textarea.style.width = (window.innerWidth / 2).toString() + "px";
+    text = text.replace(/<br>/g, '');
+    let md = new Engine(text);
+    md.Preprocess();
+    md.Process();
+    document.getElementById('textarea').innerHTML = text;
+    let output = md.Output();
+    document.getElementById('markdown-iframe').outerHTML = output;
+};

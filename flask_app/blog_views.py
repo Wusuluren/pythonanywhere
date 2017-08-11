@@ -1,7 +1,10 @@
 #!/user/bin/env python
 from flask import render_template
-from flask_app import app
+from flask import request
+from flask_app import app,webapp
+from flask_app import config
 import os
+from datetime import datetime
 
 @app.route('/blog', methods=['GET'])
 def blog():

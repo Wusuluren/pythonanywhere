@@ -1,7 +1,7 @@
 from flask import Flask
 # from flask_wtf.csrf import CSRFProtect
 import logging
-import flask_app.monitor as monitor
+import flask_app.database as database
 
 class WebApp(object):
     pass
@@ -25,8 +25,9 @@ log_console.setFormatter(formatter)
 webapp.logger.addHandler(log_file)
 webapp.logger.addHandler(log_console)
 
-monitor.monitor_init_mysql(webapp)
-monitor.monitor_init_redis(webapp)
+database.monitor_init_mysql(webapp)
+database.monitor_init_redis(webapp)
+database.blog_init_sqlite(webapp)
 
 from flask_app import views
 from flask_app import monitor_views
@@ -35,5 +36,3 @@ from flask_app import markdown_views
 from flask_app import github_records_views
 from flask_app import free_vpn_views
 from flask_app import blog_views
-
-from flask_app import mysql
