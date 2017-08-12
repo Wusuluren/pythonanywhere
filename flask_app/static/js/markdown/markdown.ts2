@@ -1,26 +1,3 @@
-let text:string = `
-大标题<br>
-======<br>
-小标题<br>
----<br>
-# 一级标题<br>
-###### 六级标题<br>
-普通文本<br>
-*斜体*<br>
-**粗体**<br>
- <br>
------<br>
- <br>
-![图片](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512)<br>
-链接[百度](http://www.baidu.com)<br>
-- 无须列表<br>
-    - 嵌套<br>
-* 无序列表2<br>
-1. 有序列表<br>
-2. 有序列表2<br>
-1. 有序列表3<br>
-`
-
 enum SymbolType{
     Text = 1,
     Header,
@@ -413,21 +390,68 @@ class Engine {
         }
         this.output = outputList.join('')
     }
+    Input(input:string) {
+        this.input = input
+    }
     Output():string{
         return this.output
     }
 }
 
+let hasInput: boolean = false
+let textarea = document.getElementById('textarea')
+let mdEngine = new Engine('') 
+
+function dealWithInput() {
+    if (hasInput) {
+        hasInput = false
+
+        let text = document.getElementById('textarea').nodeValue
+        console.log(text)
+        mdEngine.Input(text)
+        mdEngine.Preprocess()
+        mdEngine.Process()
+        let output = mdEngine.Output()
+        document.getElementById('markdown-iframe').nodeValue = output
+    }
+}
+
 window.onload = function() {
-    let textarea = document.getElementById('textarea')
     textarea.style.height = (window.innerHeight).toString()+"px"
     textarea.style.width = (window.innerWidth/2).toString()+"px"
+    textarea.oninput = function(){ hasInput = true }
 
+    let text:string = `
+大标题<br>
+======<br>
+小标题<br>
+---<br>
+# 一级标题<br>
+###### 六级标题<br>
+普通文本<br>
+*斜体*<br>
+**粗体**<br>
+ <br>
+-----<br>
+ <br>
+![图片](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512)<br>
+链接[百度](http://www.baidu.com)<br>
+- 无须列表<br>
+    - 嵌套<br>
+* 无序列表2<br>
+1. 有序列表<br>
+2. 有序列表2<br>
+1. 有序列表3<br>
+`
     text = text.replace(/<br>/g, '')
-    let md = new Engine(text) 
-    md.Preprocess()
-    md.Process()
-    document.getElementById('textarea').innerHTML = text
-    let output = md.Output()
-    document.getElementById('markdown-iframe').outerHTML = output
+    mdEngine.Input(text)
+    mdEngine.Preprocess()
+    mdEngine.Process()
+    let output = mdEngine.Output()
+    let t =  document.getElementById('textarea')
+    (<any>t).value = text
+    // document.getElementById('textarea').value = text;
+    document.getElementById("markdown-iframe").nodeValue = output
+
+    window.setInterval(dealWithInput, 1000)
 }

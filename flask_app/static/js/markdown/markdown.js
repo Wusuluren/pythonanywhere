@@ -1,38 +1,17 @@
-let text = `
-大标题<br>
-======<br>
-小标题<br>
----<br>
-# 一级标题<br>
-###### 六级标题<br>
-普通文本<br>
-*斜体*<br>
-**粗体**<br>
- <br>
------<br>
- <br>
-![图片](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512)<br>
-链接[百度](http://www.baidu.com)<br>
-- 无须列表<br>
-    - 嵌套<br>
-* 无序列表2<br>
-1. 有序列表<br>
-2. 有序列表2<br>
-1. 有序列表3<br>
-`;
-var SymbolType;
-(function (SymbolType) {
-    SymbolType[SymbolType["Text"] = 1] = "Text";
-    SymbolType[SymbolType["Header"] = 2] = "Header";
-    SymbolType[SymbolType["HeaderOpt"] = 3] = "HeaderOpt";
-    SymbolType[SymbolType["UnorderList"] = 4] = "UnorderList";
-    SymbolType[SymbolType["OrderList"] = 5] = "OrderList";
-    SymbolType[SymbolType["UnorderListOpen"] = 6] = "UnorderListOpen";
-    SymbolType[SymbolType["UnorderListClose"] = 7] = "UnorderListClose";
-    SymbolType[SymbolType["OrderListOpen"] = 8] = "OrderListOpen";
-    SymbolType[SymbolType["OrderListClose"] = 9] = "OrderListClose";
-    SymbolType[SymbolType["SepLine"] = 10] = "SepLine";
-})(SymbolType || (SymbolType = {}));
+class SymbolTypeClass {
+    constructor() {
+        this.Text = 1
+        this.Header = 2
+        this.HeaderOpt = 3
+        this.UnorderList = 4
+        this.OrderList = 5
+        this.UnorderListOpen = 6
+        this.UnorderListClose = 7
+        this.OrderListOpen = 8
+        this.OrderListClose = 9
+    } 
+}
+let SymbolType = new SymbolTypeClass()
 class Engine {
     constructor(input) {
         this.input = input;
@@ -419,19 +398,64 @@ class Engine {
         }
         this.output = outputList.join('');
     }
+    Input(input) {
+        this.input = input;
+    }
     Output() {
         return this.output;
     }
 }
+let hasInput = false;
+let textarea = document.getElementById('textarea');
+let markdown_iframe = document.getElementById('markdown-iframe')
+let mdEngine = new Engine('');
+function dealWithInput() {
+    if (hasInput) {
+        hasInput = false;
+        let text = textarea.value;
+        mdEngine.Input(text);
+        mdEngine.Preprocess();
+        mdEngine.Process();
+        let output = mdEngine.Output();
+        console.log(output)
+        markdown_iframe.srcdoc = output
+    }
+}
 window.onload = function () {
-    let textarea = document.getElementById('textarea');
+    markdown_iframe.style.height = (window.innerHeight).toString() + "px";
+    markdown_iframe.style.width = (window.innerWidth / 2).toString() + "px";
     textarea.style.height = (window.innerHeight).toString() + "px";
     textarea.style.width = (window.innerWidth / 2).toString() + "px";
+    textarea.oninput = function () { hasInput = true; console.log(this.innerHTML) };
+    let text = `
+大标题<br>
+======<br>
+小标题<br>
+---<br>
+# 一级标题<br>
+###### 六级标题<br>
+普通文本<br>
+*斜体*<br>
+**粗体**<br>
+ <br>
+-----<br>
+ <br>
+![图片](https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=538188260,366145546&fm=58&u_exp_0=4266121941,32840136&fm_exp_0=86&bpow=512&bpoh=512)<br>
+链接[百度](http://www.baidu.com)<br>
+- 无须列表<br>
+    - 嵌套<br>
+* 无序列表2<br>
+1. 有序列表<br>
+2. 有序列表2<br>
+1. 有序列表3<br>
+`;
     text = text.replace(/<br>/g, '');
-    let md = new Engine(text);
-    md.Preprocess();
-    md.Process();
-    document.getElementById('textarea').innerHTML = text;
-    let output = md.Output();
-    document.getElementById('markdown-iframe').outerHTML = output;
+    mdEngine.Input(text);
+    mdEngine.Preprocess();
+    mdEngine.Process();
+    let output = mdEngine.Output();
+    textarea.value = text;
+    markdown_iframe.srcdoc = output
+    console.log(output)
+    window.setInterval(dealWithInput, 100);
 };
