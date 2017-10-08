@@ -2,3 +2,4 @@ __pycache__
 flask_app/__pycache__
 .idea
 .vscode
+flask_app/static/vendor

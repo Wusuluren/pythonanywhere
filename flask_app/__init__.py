@@ -36,3 +36,4 @@ from flask_app import markdown_views
 from flask_app import github_records_views
 from flask_app import free_vpn_views
 from flask_app import blog_views
+from flask_app import bootstrap_views
