@@ -1,8 +1,4 @@
 from flask import render_template
-from flask import request
-from flask import redirect, url_for
-from flask import flash
-
 from flask_app import app
 from flask_app.forms import LoginForm
 

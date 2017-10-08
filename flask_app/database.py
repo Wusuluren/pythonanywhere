@@ -57,8 +57,9 @@ def monitor_init_redis(webapp):
 
 class BlogArticle(Sqlite):
     pass
+
 def blog_init_sqlite(webapp):
-    sqlite_blog = Sqlite(webapp.logger, config.SQLITE_DB_BLOG)
+    sqlite_blog = Sqlite(webapp.logger, config.SQLITE_DB)
     sqlite_blog.open()
     if sqlite_blog.exists(config.SQLITE_TABLE_ARTICLE) == False:
         create_blog_article_table_sql = "create table %s \
@@ -71,3 +72,20 @@ def blog_init_sqlite(webapp):
         sqlite_blog.execute(create_blog_article_table_sql)
 
     webapp.sqlite_blog = sqlite_blog
+
+class BilibiliDownloadCounts(Sqlite):
+    pass
+
+def bilibili_init_download(webapp):
+    sqlite_bilibili = Sqlite(webapp.logger, config.SQLITE_DB)
+    sqlite_bilibili.open()
+    if sqlite_bilibili.exists(config.SQLITE_TABLE_DOWNLOAD) == False:
+        create_bilibili_download_table_sql = "create table %s \
+            (id integer primary key autoincrement, \
+            filename text not null, \
+            count text \
+            );" % config.SQLITE_TABLE_DOWNLOAD
+        sqlite_bilibili.execute(create_bilibili_download_table_sql)
+
+    webapp.sqlite_bilibili = sqlite_bilibili
+

@@ -2,5 +2,12 @@ __pycache__
 flask_app/__pycache__
 .idea
 .vscode
+
+#vendor
 flask_app/static/vendor
+
+#pictures
 flask_app/static/bilibili
+
+#sqlite database
+sqlite

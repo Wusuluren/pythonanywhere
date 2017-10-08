@@ -28,6 +28,7 @@ webapp.logger.addHandler(log_console)
 database.monitor_init_mysql(webapp)
 database.monitor_init_redis(webapp)
 database.blog_init_sqlite(webapp)
+database.bilibili_init_download(webapp)
 
 from flask_app import views
 from flask_app import monitor_views

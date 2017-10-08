@@ -3,7 +3,6 @@ from flask import request
 from flask import redirect, url_for
 from datetime import datetime
 import json
-
 from  flask_app import app, webapp
 import flask_app.config as config
 
