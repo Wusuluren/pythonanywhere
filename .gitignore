@@ -3,3 +3,4 @@ flask_app/__pycache__
 .idea
 .vscode
 flask_app/static/vendor
+flask_app/static/bilibili
