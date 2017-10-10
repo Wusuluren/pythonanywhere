@@ -4,10 +4,19 @@ from flask import make_response, send_file
 from flask import request
 from flask_app import app,webapp
 import flask_app.config as config
+import json
 
 @app.route('/bilibili', methods=['GET'])
 def bilibili():
-    return render_template('bilibili/index.html')
+    try:
+        with open('flask_app/static/bilibili/files.json') as f:
+            s=f.read()
+            files = json.loads(s)
+    except FileNotFoundError as e:
+        print(str(e))
+        files=[]
+
+    return render_template('bilibili/index.html', files=files)
 
 @app.route('/bilibili/download', methods=['GET'])
 def dowanload():

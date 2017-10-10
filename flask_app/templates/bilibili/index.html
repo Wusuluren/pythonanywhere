@@ -13,8 +13,9 @@
 </head>
 <body>
     <ul class="nav nav-pills nav-stacked">
-        <li><a href="bilibili/download?file=2017-10-08.zip">2017-10-08.zip: 这些妹子让你好运来</a></li>
-        <li><a href="bilibili/download?file=2017-10-09.zip">2017-10-09.zip: 这些小姐姐腿好长</a></li>
+        {% for file in files %}
+            <li><a href="bilibili/download?file={{file.name}}">{{file.name}}: {{file.desc}}</a></li>
+        {% endfor %}
     </ul>
 </body>
 </html>
