@@ -9,10 +9,15 @@ if env == 'test':
     MYSQL_USERNAME='root'
     MYSQL_HOST='localhost'
     MYSQL_PASSWD='toor'
+
+    BILIBILI_FILE_DIR='./flask_app'
 else:
     MYSQL_USERNAME='post'
     MYSQL_HOST='post.mysql.pythonanywhere-services.com'
     MYSQL_PASSWD='postiskirara'
+
+    BILIBILI_FILE_DIR='/home/post/mysite/flask_app'
+
 MYSQL_DB_MONITOR='post$monitor'
 MYSQL_TABLE_MONITOR_USER='user'
 MYSQL_TABLE_MONITOR_LOG='log'
@@ -25,9 +30,3 @@ REDIS_TABLE_MONITOR_LOG='monitor_log'
 SQLITE_DB='sqlite'
 SQLITE_TABLE_ARTICLE='blog_article'
 SQLITE_TABLE_DOWNLOAD='bilibili_download'
-
-LOG_DEBUG = 0
-LOG_INFO=1
-LOG_WARN=2
-LOG_ERROR=3
-LOG_FATAL=4
