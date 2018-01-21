@@ -1,16 +1,4 @@
-#!/usr/bin/virtualenv python
-import flask_app.config as config
-from flask_app.mysql import Mysql
-from flask_app.redis import Redis
-from flask_app.sqlite import Sqlite
 
-# class User(object):
-#     def __init__(self, name, passwd):
-#         self.name = name
-#         self.passwd = passwd
-
-class MonitorUser(Mysql):
-    pass
 
 def monitor_init_mysql(webapp):
     mysql_monitor = MonitorUser(webapp.logger,
@@ -37,8 +25,7 @@ def monitor_init_mysql(webapp):
     
     webapp.mysql_monitor = mysql_monitor
 
-class RedisMonitor(Redis):
-    pass
+
 
 def monitor_init_redis(webapp):
     redis_monitor_user = RedisMonitor(webapp.logger,
@@ -55,8 +42,6 @@ def monitor_init_redis(webapp):
     webapp.redis_monitor_user = redis_monitor_user
     webapp.redis_monitor_log = redis_monitor_log
 
-class BlogArticle(Sqlite):
-    pass
 
 def blog_init_sqlite(webapp):
     sqlite_blog = Sqlite(webapp.logger, config.SQLITE_DB)
@@ -73,19 +58,4 @@ def blog_init_sqlite(webapp):
 
     webapp.sqlite_blog = sqlite_blog
 
-class BilibiliDownloadCounts(Sqlite):
-    pass
-
-def bilibili_init_download(webapp):
-    sqlite_bilibili = Sqlite(webapp.logger, config.SQLITE_DB)
-    sqlite_bilibili.open()
-    if sqlite_bilibili.exists(config.SQLITE_TABLE_DOWNLOAD) == False:
-        create_bilibili_download_table_sql = "create table %s \
-            (id integer primary key autoincrement, \
-            filename text not null, \
-            count text \
-            );" % config.SQLITE_TABLE_DOWNLOAD
-        sqlite_bilibili.execute(create_bilibili_download_table_sql)
-
-    webapp.sqlite_bilibili = sqlite_bilibili
 

@@ -3,18 +3,18 @@ from flask import Flask
 import logging
 import flask_app.database as database
 
+
 class WebApp(object):
-    pass
+    def __init__(self, app):
+        self.app = app
+
 
 app = Flask(__name__)
 # app.config.from_object('config')
 # csrf = CSRFProtect(app)
 app.config['SECRET_KEY'] = 'pythonanywhere'
 
-webapp = WebApp()
-
-webapp.app = app
-
+webapp = WebApp(app)
 webapp.logger = logging.getLogger('app')
 webapp.logger.setLevel(logging.DEBUG)
 log_file = logging.FileHandler('/tmp/app.log')
@@ -25,17 +25,17 @@ log_console.setFormatter(formatter)
 webapp.logger.addHandler(log_file)
 webapp.logger.addHandler(log_console)
 
-database.monitor_init_mysql(webapp)
-database.monitor_init_redis(webapp)
-database.blog_init_sqlite(webapp)
-database.bilibili_init_download(webapp)
+# database.monitor_init_mysql(webapp)
+# database.monitor_init_redis(webapp)
+# database.blog_init_sqlite(webapp)
 
-from flask_app import views
-from flask_app import monitor_views
-from flask_app import games_views
-from flask_app import markdown_views
-from flask_app import github_records_views
-from flask_app import free_vpn_views
-from flask_app import blog_views
-from flask_app import bootstrap_views
-from flask_app import bilibili_views
+# from flask_app.homepage import homepage
+# app.register_blueprint(homepage)
+
+from flask_app.blueprint.mlmnist import mlmnist
+app.register_blueprint(mlmnist, url_prefix='/mlmnist')
+
+# from flask_app.blueprint.snake import snake
+# app.register_blueprint(snake, url_prefix='/snake')
+
+# from flask_app import view
