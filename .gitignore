@@ -5,3 +5,6 @@ flask_app/__pycache__
 
 #sqlite database
 sqlite_db
+
+#tensorflow
+save

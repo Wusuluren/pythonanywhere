@@ -25,27 +25,26 @@ from __future__ import print_function
 import argparse
 import sys
 import numpy
+import os
 
 from tensorflow.examples.tutorials.mnist import input_data
-
 import tensorflow as tf
 
 FLAGS = None
-Y = None
-X = None
 SESS = None
+X = Y = None
 
 
-def main(_, data=None):
-    global FLAGS, Y, X, SESS
+def main(_):
+    global FLAGS, SESS, X, Y
     # Import data
     mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
 
     # Create the model
-    X = tf.placeholder(tf.float32, [None, 784])
-    W = tf.Variable(tf.zeros([784, 10]))
-    b = tf.Variable(tf.zeros([10]))
-    Y = tf.matmul(X, W) + b
+    X = tf.placeholder(tf.float32, [None, 784], name="X")
+    W = tf.Variable(tf.zeros([784, 10]), name="W")
+    b = tf.Variable(tf.zeros([10]), name="b")
+    Y = tf.add(tf.matmul(X, W), b, name="Y")
 
     # Define loss and optimizer
     y_ = tf.placeholder(tf.float32, [None, 10])
@@ -64,30 +63,38 @@ def main(_, data=None):
     train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
     sess = tf.InteractiveSession()
-    # sess = tf.Session()
     tf.global_variables_initializer().run()
+    saver = tf.train.Saver(max_to_keep=1)
     # Train
     for _ in range(1000):
         batch_xs, batch_ys = mnist.train.next_batch(100)
         sess.run(train_step, feed_dict={X: batch_xs, y_: batch_ys})
+
+    print(saver.save(sess, "save/mnist_softmax.ckpt"))
 
     # Test trained model
     correct_prediction = tf.equal(tf.argmax(Y, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     print(sess.run(accuracy, feed_dict={X: mnist.test.images,
                                         y_: mnist.test.labels}))
-
     SESS = sess
-    # if data is None:
-    #     data = [1.0 for _ in range(784)]
-    # px = numpy.array(data).reshape(1, 784)
-    # predictions = tf.argmax(y, 1)
-    # res = sess.run(predictions, feed_dict={x: px})
-    # print(res)
 
 
 def Train():
-    global FLAGS
+    global FLAGS, SESS, X, Y
+
+    if os.path.exists('save/mnist_softmax.ckpt.meta'):
+        saver = tf.train.import_meta_graph("save/mnist_softmax.ckpt.meta")
+        graph = tf.get_default_graph()
+        sess = tf.Session()
+        X = graph.get_tensor_by_name("X:0")
+        # W = graph.get_tensor_by_name("W:0")
+        # b = graph.get_tensor_by_name("b:0")
+        Y = graph.get_tensor_by_name("Y:0")
+        saver.restore(sess, "save/mnist_softmax.ckpt")
+        SESS = sess
+        return
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str, default='/tmp/tensorflow/mnist/input_data',
                       help='Directory for storing input data')
@@ -97,7 +104,7 @@ def Train():
 
 
 def Predict(data):
-    global FLAGS, Y, X, SESS
+    global FLAGS, SESS, X, Y
     px = numpy.array(data).reshape(1, 784)
     predictions = tf.argmax(Y, 1)
     res = SESS.run(predictions, feed_dict={X: px})
