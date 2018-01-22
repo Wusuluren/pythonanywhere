@@ -1,2 +1,1 @@
-# pythonanywhere
-some code running on http://post.pythonanywhere.com/
+some code running on wusu.ga
