@@ -29,13 +29,17 @@ webapp.logger.addHandler(log_console)
 # database.monitor_init_redis(webapp)
 # database.blog_init_sqlite(webapp)
 
-# from flask_app.homepage import homepage
-# app.register_blueprint(homepage)
+from flask_app.blueprint.home import home
+app.register_blueprint(home)
 
 from flask_app.blueprint.mlmnist import mlmnist
 app.register_blueprint(mlmnist, url_prefix='/mlmnist')
 
-# from flask_app.blueprint.snake import snake
-# app.register_blueprint(snake, url_prefix='/snake')
+from flask_app.blueprint.snake import snake
+app.register_blueprint(snake, url_prefix='/snake')
 
-# from flask_app import view
+from flask_app.blueprint.markdown import markdown
+app.register_blueprint(markdown, url_prefix='/markdown')
+
+from flask_app.blueprint.flower import flower
+app.register_blueprint(flower, url_prefix='/flower')

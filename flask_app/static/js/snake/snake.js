@@ -2,6 +2,7 @@ const DIR_DOWN = 0
 const DIR_UP = 1
 const DIR_LEFT = 2
 const DIR_RIGHT = 3
+const IMAGE_PATH = '/static/js/snake'
 
 let Snake = function(ctx) {
     let obj = {
@@ -15,12 +16,12 @@ let Snake = function(ctx) {
         imgBodyLoadDone: false,
         imgHeadLoadDone: false,
     }
-    obj.imgHead.src = "/static/js/games/head.png"
+    obj.imgHead.src = IMAGE_PATH+"/head.png"
     obj.imgHead.onload = function() {
         obj.imgHeadLoadDone = true
         checkImgLoadDone()
     }
-    obj.imgBody.src = "/static/js/games/body.png"
+    obj.imgBody.src = IMAGE_PATH+"/body.png"
     obj.imgBody.onload = function() {
         obj.imgBodyLoadDone = true
         checkImgLoadDone()
@@ -170,6 +171,24 @@ let Snake = function(ctx) {
                 break
         }
     }
+    obj.touchHandler = function(e) {
+        if (e.touches != undefined && e.touches.length > 0) {
+            let touch = e.touches[e.touches.length-1]
+            let head = obj.pos[0]
+            let diffX = touch.pageX - head.x
+            let diffY = touch.pageY - head.y
+            switch (obj.direction) {
+                case DIR_LEFT:
+                case DIR_RIGHT:
+                    obj.direction = diffY > 0 ? DIR_DOWN : DIR_UP
+                    break
+                case DIR_UP:
+                case DIR_DOWN:
+                    obj.direction = diffX > 0 ? DIR_RIGHT : DIR_LEFT
+                    break
+            }
+        }
+    }
     obj.init = function(height, width) {
         obj.height = height - obj.yScale
         obj.width = width - obj.xScale
@@ -196,7 +215,7 @@ let Food = function(ctx) {
         yScale: 30,
         imgFoodLoadDone: false,
     }
-    obj.imgFood.src = "/static/js/games/food.png"
+    obj.imgFood.src = IMAGE_PATH+"/food.png"
     obj.imgFood.onload = function() {
         obj.imgFoodLoadDone = true
         checkImgLoadDone()
@@ -284,6 +303,7 @@ let Game = function() {
     }
     obj.start = function() {
         window.onkeypress = obj.snake.keyHandler
+        window.ontouchstart = obj.snake.touchHandler
         window.setInterval(obj.update, 1000)
     }
     obj.init()

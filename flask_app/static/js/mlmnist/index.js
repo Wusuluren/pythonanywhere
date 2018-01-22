@@ -177,7 +177,7 @@ $(document).ready(function() {
             type:'POST', 
             data: {img_data: JSON.stringify(dataImg)},
             cache: false,
-            async:false, 
+            // async:false, 
 
             success:function (str) {
                 $('#resultText').html('我猜是'+str)

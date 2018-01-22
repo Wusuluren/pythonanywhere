@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="shortcut icon" href="/static/favicon.ico">
+        <title>Markdown解释器</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid" style="text-align:center">
+                    <p class="navbar-text"><h2>原始文本</h2></p>
+                </div>
+            </nav>
+            <div class="row">
+                <textarea id="textarea" class="form-control" style="resize:none"></textarea>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid" style="text-align:center">
+                    <p class="navbar-text"><h2>Markdown文本</h2></p>
+                </div>
+            </nav>
+            <div class="row">
+                <iframe id="markdown-iframe" class="form-control"></iframe>
+            </div>
+        </div>
+        <script src="/static/js/markdown/markdown.js"></script>
+    </body>
+</html>

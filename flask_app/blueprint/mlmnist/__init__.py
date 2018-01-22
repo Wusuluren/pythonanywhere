@@ -6,13 +6,12 @@ from flask_app.blueprint.mlmnist.mnist import mnist_softmax
 
 mnist_softmax.Train()
 
-mlmnist = Blueprint('mlmnist', __name__,
-                    template_folder='templates',
-                    static_folder='static')
+mlmnist = Blueprint('mlmnist', __name__)
+
 
 @mlmnist.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return render_template('mlmnist/index.html')
 
 
 @mlmnist.route('/result', methods=['GET', 'POST'])
