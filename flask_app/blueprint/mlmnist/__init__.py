@@ -17,6 +17,8 @@ def index():
 @mlmnist.route('/result', methods=['GET', 'POST'])
 def result():
     img_data = request.form.get('img_data')
+    if img_data is None:
+        return '10'
     img_data = json.loads(img_data)
 
     # 把数字区域居中

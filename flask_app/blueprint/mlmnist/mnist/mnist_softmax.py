@@ -105,6 +105,7 @@ def Train():
 
 def Predict(data):
     global FLAGS, SESS, X, Y
+    data = [1 if i % 28 == 0 else 0 for i in range(28 * 28)]
     px = numpy.array(data).reshape(1, 784)
     predictions = tf.argmax(Y, 1)
     res = SESS.run(predictions, feed_dict={X: px})
