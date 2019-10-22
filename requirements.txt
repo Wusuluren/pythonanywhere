@@ -30,7 +30,7 @@ numpy==1.14.0
 parso==0.1.1
 pathtools==0.1.2
 pickleshare==0.7.4
-Pillow==5.0.0
+Pillow==6.2.0
 prompt-toolkit==1.0.15
 protobuf==3.5.1
 Pygments==2.2.0
