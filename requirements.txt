@@ -33,7 +33,7 @@ pickleshare==0.7.4
 Pillow==5.0.0
 prompt-toolkit==1.0.15
 protobuf==3.5.1
-Pygments==2.2.0
+Pygments==2.7.4
 pylint==1.7.4
 PyMySQL==0.7.11
 pyparsing==2.2.0
