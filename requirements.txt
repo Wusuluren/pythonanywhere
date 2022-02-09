@@ -52,7 +52,7 @@ selenium==3.6.0
 simplegeneric==0.8.1
 sip==4.19.3
 six==1.11.0
-tensorflow==1.4.0
+tensorflow==2.5.3
 tensorflow-tensorboard==0.4.0rc3
 Theano==1.0.1
 traitlets==4.3.2
